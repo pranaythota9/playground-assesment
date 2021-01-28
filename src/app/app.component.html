@@ -1,0 +1,49 @@
+<div>
+    <h2>Current Time: {{currentDateTime | date: 'medium'}}</h2>
+    <h2 *ngIf="timeDiff">Response Time: {{timeDiff}} Seconds</h2>
+</div>
+
+<div>
+    <form [formGroup]="searchForm" (ngSubmit)="search(searchForm);">
+        <mat-form-field class="example-full-width">
+            <input type="email" matInput formControlName="name"
+                   placeholder="Search for Names">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="example-form-field">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [rangePicker]="rangePicker">
+                <input matStartDate formControlName="dateIntMin" placeholder="Start date">
+                <input matEndDate formControlName="dateIntMax" placeholder="End date">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #rangePicker>
+                <mat-date-range-picker-actions>
+                    <button mat-button matDateRangePickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+                </mat-date-range-picker-actions>
+            </mat-date-range-picker>
+        </mat-form-field>
+        <button mat-raised-button [disabled]="!searchForm.dirty || submitted" type="submit">Search</button>
+    </form>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID. </th>
+          <td mat-cell *matCellDef="let element"> {{element.resource.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name" >
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.resource?.name ? element.resource?.name[0]?.given[0] : ''}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="birthdate" >
+          <th mat-header-cell *matHeaderCellDef> Birth Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.resource?.birthDate | date: 'short'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+</div>
